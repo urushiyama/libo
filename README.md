@@ -1,5 +1,7 @@
 # libo: fast access to LICENSE boilerplates
 
+[![LICENSE](https://img.shields.io/github/license/urushiyama/libo)](https://github.com/urushiyama/libo/tree/master/LICENSE)
+
 **libo** (short for LICENSE boilerplates) is a shell script to help you easily access LICENSE boilerplates from https://github.com/urushiyama/LICENSES.
 
 This is totally inspired from [gibo](https://github.com/simonwhitaker/gibo), one of awesome tools to make .gitignore.
