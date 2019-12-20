@@ -1,0 +1,195 @@
+#!/bin/sh
+#
+# Script for fastly accessing LICENSE boilerplates from
+# https://github.com/urushiyama/LICENSES
+# Totally inspired by
+# https://github.com/simonwhitaker/gibo
+
+remote_repo=https://github.com/urushiyama/LICENSES
+local_repo=${LIBO_BOILERPLATES:-"$HOME/.LICENSES-boilerplates"}
+current_repo_rev=$(cd $local_repo 2> /dev/null && git rev-parse HEAD)
+remote_web_root=https://raw.github.com/urushiyama/LICENSES/$current_repo_rev
+
+version() {
+  echo "$(basename $0) 1.0.0 by Yuta Urushiyama <aswif10flis1ntkb@gmail.com>"
+  echo "https://github.com/urushiyama/libo"
+}
+
+usage() {
+  version
+cat << EOF >&2
+
+Fetches LICENSE boilerplates from https://github.com/urushiyama/LICENSES
+
+Usage:
+    $(basename $0) [command] [options]
+
+Example:
+    $(basename $0) dump CC0-1.0-Universal >> LICENSE
+
+Commands:
+    dump BOILERPLATE... Write boilerplate(s) to STDOUT
+    help                Display this help text
+    list                List available boilerplates
+    root                Show the directory where libo stores its boilerplates
+    search STR          Search for boilerplates with STR in the name
+    update              Update list of available boilerplates
+    version             Display current script version
+
+Options:
+    -y YEAR             Set published year in boilerplates
+    -a AUTHOR           Set published author/organization in boilerplates
+EOF
+}
+
+clone() {
+    if [ $1 -a $1 = '--silently' ]; then
+        git clone -q "$remote_repo" "$local_repo"
+    else
+        echo "Cloning $remote_repo to $local_repo"
+        git clone "$remote_repo" "$local_repo"
+    fi
+}
+
+init() {
+    if [ ! -e "$local_repo/.git" ]; then
+        clone $1
+    fi
+}
+
+list() {
+    init
+
+    if [ -t 1 ]; then
+        shape='column'
+    else
+        shape='cat'
+    fi
+
+    find "$local_repo/templates" -type f -exec basename \{\} \; | sort -f \
+      | eval ${shape}
+}
+
+root() {
+    echo $local_repo
+}
+
+search() {
+    init
+    for filename in $(find "$local_repo" -iname "*$**" -exec basename \{\} \; | sort); do
+        echo $filename
+    done
+}
+
+update() {
+    if [ ! -e "$local_repo/.git" ]; then
+        clone
+    else
+        cd "$local_repo"
+        git pull --ff origin master
+    fi
+}
+
+dump() {
+    init --silently
+
+    language_file=$(find "$local_repo" -iname "$1" | head -n 1)
+    language_file_relative=${language_file#"$local_repo/"}
+
+    if [ -n "$language_file" ]; then
+        echo "### $remote_web_root/$language_file_relative"
+        echo
+        cat "$language_file"
+        echo
+        echo
+    else
+        echo "Unknown argument: $1" >&2
+    fi
+}
+
+# --- Main entry point ----------------------
+
+if [ $# -eq 0 ]; then
+    usage
+    exit 1
+fi
+
+# Parse comand-line
+should_dump=0
+
+year=$(date +%Y)
+author=$(git config user.name)
+author=${author:-$(id -u -n)}
+while [ $# -gt 0 ]; do
+    case $1 in
+        version )
+            version
+            exit 0
+            ;;
+        list )
+            list
+            exit 0
+            ;;
+        root )
+            root
+            exit 0
+            ;;
+        update )
+            update
+            exit 0
+            ;;
+        help )
+            usage
+            exit 0
+            ;;
+        dump )
+            if [ $# -gt 1 ]; then
+                should_dump=1
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        search )
+            if [ $# -gt 1 ]; then
+                shift
+                search $*
+                exit 0
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -y | --year )
+            if [ $# -gt 1 ]; then
+                shift
+                year=$*
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -a | --author )
+            if [ $# -gt 1 ]; then
+                shift
+                author=$*
+            else
+                usage
+                exit 1
+            fi
+            ;;
+        -* | --* )
+            usage
+            exit 1
+            ;;
+        * ) # default case
+            if [ $should_dump -eq 1 ]; then
+                dump $1
+            else
+                usage
+                exit 1
+            fi
+            ;;
+    esac
+    shift
+done
