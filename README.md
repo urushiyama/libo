@@ -39,6 +39,19 @@ $ brew tap urushiyama/homebrew-libo
 $ brew install libo
 ```
 
+### via [Docker](https://www.docker.com/)
+
+Docker enables you to run the command just like as below:
+```shell
+$ docker run --rm urushiyama/libo:latest [options] [command]
+```
+
+Note that setting custom author name must be needed if you use docker because docker process runs as independent root environment.
+
+```shell
+$ docker run --rm urushiyama/libo:latest -a "Full Name" dump MIT >> LICENSE
+```
+
 ## Credits
 
 libo was written by Yuta Urushiyama ([@YUrushiyama](https://twitter.com/YUrushiyama))
