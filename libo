@@ -11,7 +11,7 @@ current_repo_rev=$(cd $local_repo 2> /dev/null && git rev-parse HEAD)
 remote_web_root=https://raw.github.com/urushiyama/LICENSES/$current_repo_rev
 
 version() {
-  echo "$(basename $0) 1.0.1 by Yuta Urushiyama <aswif10flis1ntkb@gmail.com>"
+  echo "$(basename $0) 1.0.2 by Yuta Urushiyama <aswif10flis1ntkb@gmail.com>"
   echo "https://github.com/urushiyama/libo"
 }
 
@@ -93,11 +93,11 @@ update() {
 dump() {
     init --silently
 
-    language_file=$(find "$local_repo" -iname "$1" | head -n 1)
-    language_file_relative=${language_file#"$local_repo/"}
+    license_file=$(find "$local_repo" -iname "$1" | head -n 1)
+    license_file_relative=${license_file#"$local_repo/"}
 
-    if [ -n "$language_file" ]; then
-        cat "$language_file"
+    if [ -n "$license_file" ]; then
+        cat "$license_file"
     else
         echo "Unknown argument: $1" >&2
     fi
