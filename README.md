@@ -32,7 +32,12 @@ For additional usages, run `libo help`.
 
 ## Installation
 
-*TBD*
+### via [Homebrew](https://github.com/Homebrew/brew)
+
+```shell
+$ brew tap urushiyama/homebrew-libo
+$ brew install libo
+```
 
 ## Credits
 
