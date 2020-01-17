@@ -1,6 +1,8 @@
 # libo: fast access to LICENSE boilerplates
 
 [![LICENSE](https://img.shields.io/github/license/urushiyama/libo)](https://github.com/urushiyama/libo/tree/master/LICENSE)
+[![Docker build status](https://img.shields.io/docker/cloud/build/urushiyama/libo)](https://hub.docker.com/r/urushiyama/libo/builds)
+[![Docker pulls](https://img.shields.io/docker/pulls/urushiyama/libo)](https://hub.docker.com/r/urushiyama/libo)
 
 **libo** (short for LICENSE boilerplates) is a shell script to help you easily access LICENSE boilerplates from https://github.com/urushiyama/LICENSES.
 
