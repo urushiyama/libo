@@ -12,9 +12,19 @@ This is totally inspired by [gibo](https://github.com/simonwhitaker/gibo), one o
 $ libo dump CC0-1.0-Universal >> LICENSE
 ```
 
-If the template contains `${YEAR}` or `${AUTHOR}`;
+If the template contains `${YEAR}` or `${AUTHOR}` such as MIT;
+```shell
+$ libo dump MIT >> LICENSE
+```
+provides MIT License file replacing those with current year and your git username (or login name).
+
+If you want to set custom year and author name;
 ```shell
 $ libo -y 2020 -a "Full Name" dump MIT >> LICENSE
+```
+or
+```shell
+$ LIBO_YEAR=2020 LIBO_AUTHOR="Full Name" libo dump MIT >> LICENSE
 ```
 should provide what you want.
 
