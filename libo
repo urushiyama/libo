@@ -11,7 +11,7 @@ current_repo_rev=$(cd $local_repo 2> /dev/null && git rev-parse HEAD)
 remote_web_root=https://raw.github.com/urushiyama/LICENSES/$current_repo_rev
 
 version() {
-  echo "$(basename $0) 1.0.0 by Yuta Urushiyama <aswif10flis1ntkb@gmail.com>"
+  echo "$(basename $0) 1.0.1 by Yuta Urushiyama <aswif10flis1ntkb@gmail.com>"
   echo "https://github.com/urushiyama/libo"
 }
 
@@ -113,8 +113,8 @@ fi
 # Parse comand-line
 should_dump=0
 
-YEAR=$(date +%Y)
-AUTHOR=$(git config user.name)
+YEAR=${LIBO_YEAR:-$(date +%Y)}
+AUTHOR=${LIBO_AUTHOR:-$(git config user.name)}
 AUTHOR=${AUTHOR:-$(id -u -n)}
 while [ $# -gt 0 ]; do
     case $1 in
